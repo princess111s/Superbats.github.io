@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Gift Surprise</title>
+
+<style>
+body {
+    margin: 0;
+    overflow-x: hidden;
+    font-family: Arial;
+    background: black;
+    color: white;
+}
+
+/* STAR BACKGROUND */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -2;
+}
+
+/* FIRST SCREEN */
+#giftScreen {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.box {
+    width: 150px;
+    height: 150px;
+    background: #ff4d6d;
+    position: relative;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.box:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    background: gold;
+    top: 50%;
+}
+
+.box:after {
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 20px;
+    background: gold;
+    left: 50%;
+}
+
+.opened {
+    transform: scale(1.2) rotate(10deg);
+}
+
+/* BATS */
+.bat {
+    position: fixed;
+    font-size: 20px;
+    animation: fly 2s linear forwards;
+}
+
+@keyframes fly {
+    from { transform: translate(0,0); opacity: 1; }
+    to { transform: translate(-200px,-200px); opacity: 0; }
+}
+
+/* SECOND SCREEN */
+#second {
+    min-height: 100vh;
+    padding: 50px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+.gallery img {
+    width: 200px;
+    margin: 10px;
+    border-radius: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="stars"></canvas>
+
+<div id="giftScreen">
+    <h2>Click the gift 🎁</h2>
+    <div class="box" onclick="openBox(this)"></div>
+</div>
+
+<div id="second">
+    <h1>2007.05.25 🎂</h1>
+
+    <div class="gallery">
+        <img src="saba1.jpg">
+        <img src="saba2.jpg">
+        <img src="saba3.jpg">
+    </div>
+</div>
+
+<script>
+// BOX OPEN + BATS
+function openBox(el){
+    el.classList.add("opened");
+
+    for(let i=0;i<10;i++){
+        let bat = document.createElement("div");
+        bat.className = "bat";
+        bat.innerHTML = "🦇";
+        bat.style.left = "50%";
+        bat.style.top = "50%";
+        bat.style.fontSize = Math.random()*20 + 20 + "px";
+        document.body.appendChild(bat);
+
+        setTimeout(()=>bat.remove(),2000);
+    }
+
+    document.getElementById("second").scrollIntoView({behavior:"smooth"});
+}
+
+// STARS ANIMATION
+const canvas = document.getElementById("stars");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let stars = [];
+
+for(let i=0;i<100;i++){
+    stars.push({
+        x: Math.random()*canvas.width,
+        y: Math.random()*canvas.height,
+        r: Math.random()*2
+    });
+}
+
+function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    ctx.fillStyle="white";
+    for(let s of stars){
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+        ctx.fill();
+
+        s.y += 0.3;
+        if(s.y>canvas.height) s.y=0;
+    }
+
+    requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+
+</body>
+</html>
